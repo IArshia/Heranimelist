@@ -1,4 +1,4 @@
-  insert into
+insert into
   anime_anime (id, name, summery, myanimelist_score, released_date, score, image_url)
 values
   ( 1, "!NVADE SHOW!", "Animated music video for RAISE A SUILENs song !NVADE SHOW!. It was first released on BanG Dreams official YouTube and was later included in the limited edition Blu-ray for RAISE A SUILENs sixth sin.", 6.09, "10-07-20", 0, "https://cdn.myanimelist.net/r/50x70/images/anime/1930/122178.jpg?s=489848499caac93de7a45846159def45")
