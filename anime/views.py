@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from .serializers import AnimeSerializer, ListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer
+from .serializers import AnimeSerializer, ListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
 from .models import Anime, ListAnime, ListAnimeItem, Comment
+from .permissions import IsAdminOrReadOnly
 
 
 
 class AnimeViewSet(ModelViewSet):
     serializer_class = AnimeSerializer
     queryset = Anime.objects.prefetch_related('comments').all()
+    permission_classes = [IsAdminOrReadOnly]
 
-
+    
 class ListAnimeViewSet(ModelViewSet):
     serializer_class = ListAnimeSerializer
     queryset = ListAnime.objects.prefetch_related('items__anime').all()
@@ -36,7 +38,8 @@ class ListAnimeItemViewSet(ModelViewSet):
 
 class CommentViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
-    queryset = Comment.objects.prefetch_related('comments__anime').all()
+    queryset = Comment.objects.select_related('anime').all()
+
 
     def get_permissions(self):
         if self.request.method in ['POST', 'PATCH' ,'DELETE']:
@@ -46,8 +49,10 @@ class CommentViewSet(ModelViewSet):
     
 
     def get_serializer_class(self):
-        if self.request.method in ['POST', 'PATCH' ,'DELETE']:
+        if self.request.method in ['POST']:
             return PostCommentSerializer
+        elif self.request.method in ['PATCH','DELETE']:
+            return UpdateCommentSerializer
         else:
             return CommentSerializer
 
