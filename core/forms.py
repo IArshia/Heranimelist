@@ -8,6 +8,7 @@ class CustomUserCreationForm(BaseUserCreationForm):
         fields = BaseUserCreationForm.Meta.fields + ("email",)
 
 
+
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm):
