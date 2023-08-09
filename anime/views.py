@@ -12,7 +12,6 @@ from .models import Anime, ListAnime, ListAnimeItem, Comment
 from .permissions import IsAdminOrReadOnly
 
 
-
 class AnimeViewSet(ModelViewSet):
     serializer_class = AnimeSerializer
     queryset = Anime.objects.prefetch_related('comments').all()
