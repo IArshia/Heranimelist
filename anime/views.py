@@ -27,6 +27,12 @@ class ListAnimeViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
     queryset = ListAnime.objects.select_related('user').all()
 
+    def get_permissions(self):
+        if self.request.method in ['POST', 'PATCH' ,'DELETE']:
+            return [IsAuthenticated()]
+        else:
+            return []
+
     def get_serializer_class(self):
         if self.request.method in ['POST', 'DELETE']:
             return AddListAnimeSerializer

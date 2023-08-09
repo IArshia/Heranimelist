@@ -6,7 +6,7 @@ class Anime(models.Model):
     summery = models.TextField(blank=True)
     myanimelist_score = models.DecimalField(max_digits=6, decimal_places=2)
     released_date = models.DateField()
-    score = models.DecimalField(max_digits=6, decimal_places=2)
+    score = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     image_url = models.TextField(null=True)
 
     def __str__(self) -> str:

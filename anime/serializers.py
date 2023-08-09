@@ -51,9 +51,14 @@ class UpdateListAnimeSerializer(serializers.ModelSerializer):
 
 
 class AddListAnimeItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ListAnimeItem
+        fields = ['id', 'anime_id']
+    
+    anime_id = serializers.IntegerField()
 
-    def validate_anime(self, value):
-        if not Anime.objects.filter(pk=value.id).exists():
+    def validate_anime_id(self, value):
+        if not Anime.objects.filter(pk=value).exists():
             raise serializers.ValidationError(
                 'No Anime with the given ID was found.')
         return value
@@ -61,7 +66,7 @@ class AddListAnimeItemSerializer(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         list_id = self.context['list_id']
-        anime_id = self.validated_data['anime'].id
+        anime_id = self.validated_data['anime_id']
 
         try:
             list_anime_item = ListAnimeItem.objects.get(
@@ -73,10 +78,6 @@ class AddListAnimeItemSerializer(serializers.ModelSerializer):
                 list_id=list_id, **self.validated_data)
 
         return self.instance
-
-    class Meta:
-        model = ListAnimeItem
-        fields = ['id', 'anime']
 
 
 class CommentSerializer(serializers.ModelSerializer):
