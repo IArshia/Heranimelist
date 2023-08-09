@@ -43,7 +43,7 @@ class ListAnimeViewSet(ModelViewSet):
         user_id = self.request.user.id
         list = ListAnime.objects.get(id=kwargs['pk'])
         if user_id != list.user.id:
-            return Response({'error': 'List can not delete.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({'error': 'List can not delete because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         return super().destroy(request, *args, **kwargs)
     
@@ -51,7 +51,7 @@ class ListAnimeViewSet(ModelViewSet):
         user_id = self.request.user.id
         list = ListAnime.objects.get(id=kwargs['pk'])
         if user_id != list.user.id:
-            return Response({'error': 'List can not be update.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({'error': 'List can not be update because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().update(request, *args, **kwargs)
 
 
@@ -75,7 +75,7 @@ class ListAnimeItemViewSet(ModelViewSet):
         user_id = self.request.user.id
         list = ListAnime.objects.get(id=kwargs['list_pk'])
         if user_id != list.user.id:
-            return Response({'error': 'List item can not Add.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({'error': 'List item can not add because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         return super().create(request, *args, **kwargs)
 
@@ -83,7 +83,7 @@ class ListAnimeItemViewSet(ModelViewSet):
         user_id = self.request.user.id
         list_item = ListAnimeItem.objects.get(id=kwargs['pk'])
         if user_id != list_item.list.user.id:
-            return Response({'error': 'List item can not delete.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({'error': 'List item can not delete because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         return super().destroy(request, *args, **kwargs)
 
@@ -116,7 +116,7 @@ class CommentViewSet(ModelViewSet):
         user_id = self.request.user.id
         comment = Comment.objects.get(id=kwargs['pk'])
         if user_id != comment.user.id:
-            return Response({'error': 'Comment can not delete.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({'error': 'Comment can not delete because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         return super().destroy(request, *args, **kwargs)
     
@@ -124,7 +124,7 @@ class CommentViewSet(ModelViewSet):
         user_id = self.request.user.id
         Comment = Comment.objects.get(id=kwargs['pk'])
         if user_id != Comment.user.id:
-            return Response({'error': 'Comment can not be update.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return Response({'error': 'Comment can not be update because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().update(request, *args, **kwargs)
     
     
