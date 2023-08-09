@@ -35,8 +35,12 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="tb-contact">
-                            <p><i class="fas fa-envelope"></i>info@mail.com</p>
-                            <p><i class="fas fa-phone-alt"></i>+012 345 6789</p>
+                            {% if user.is_authenticated %}
+                                <p> {{user.username}} </p>
+                                <a href="{% url 'logout' %}">Logout</a>
+                            {% else %}
+                                <a href="{% url 'login' %}">  Login</a>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -95,9 +99,14 @@
                             <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dropdown</a>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item">Sub Item 1</a>
-                                    <a href="#" class="dropdown-item">Sub Item 2</a>
+                                <div class="dropdown-menu">  
+                                    <a href="{% url 'signup' %}" class="dropdown-item">Signup</a>
+                                    {% if user.is_authenticated %}
+                                        <a class="dropdown-item" href="{% url 'password_change' %}">Change Cassword</a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'password_reset' %}">Reset Password</a>
+                                    {% endif %}
+
                                 </div>
                             </div>
                             <a href="single-page.html" class="nav-item nav-link">Single Page</a>
