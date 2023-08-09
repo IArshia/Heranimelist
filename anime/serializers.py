@@ -28,7 +28,26 @@ class ListAnimeSerializer(serializers.ModelSerializer):
     items = ListAnimeItmeSerializer(many=True, read_only=True)
     class Meta:
         model = ListAnime
-        fields = ['id', 'name', 'items', 'created_at']
+        fields = ['id', 'name', 'user', 'items', 'created_at']
+
+
+class AddListAnimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ListAnime
+        fields = ['id', 'name']
+
+    def save(self, **kwargs):
+        user_id = self.context['user_id']
+        self.isinstance =  ListAnime.objects.create(
+            user_id=user_id, **self.validated_data)
+        return self.instance
+
+
+class UpdateListAnimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ListAnime
+        fields = ['name']
+    
 
 
 class AddListAnimeItemSerializer(serializers.ModelSerializer):
@@ -39,10 +58,10 @@ class AddListAnimeItemSerializer(serializers.ModelSerializer):
                 'No Anime with the given ID was found.')
         return value
 
+
     def save(self, **kwargs):
         list_id = self.context['list_id']
         anime_id = self.validated_data['anime'].id
-
 
         try:
             list_anime_item = ListAnimeItem.objects.get(
@@ -72,7 +91,6 @@ class PostCommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['id', 'title', 'content']
         
-
     def save(self, **kwargs):
         anime_id = self.context['anime_id']
         user_id = self.context['user_id']

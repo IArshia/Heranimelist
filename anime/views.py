@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import status
 from anime.pagination import DefaultPagination
-from .serializers import AnimeSerializer, ListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
+from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSerializer, UpdateListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
 from .models import Anime, ListAnime, ListAnimeItem, Comment
 from .permissions import IsAdminOrReadOnly
 
@@ -25,8 +25,34 @@ class AnimeViewSet(ModelViewSet):
 
     
 class ListAnimeViewSet(ModelViewSet):
-    serializer_class = ListAnimeSerializer
-    queryset = ListAnime.objects.prefetch_related('items__anime').all()
+    http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    queryset = ListAnime.objects.select_related('user').all()
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST', 'DELETE']:
+            return AddListAnimeSerializer
+        elif self.request.method == 'PATCH':
+            return UpdateListAnimeSerializer
+        return ListAnimeSerializer
+    
+    def get_serializer_context(self):
+        user_id = self.request.user.id
+        return {'user_id':user_id}
+
+    def destroy(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        list = ListAnime.objects.get(id=kwargs['pk'])
+        if user_id != list.user.id:
+            return Response({'error': 'List can not delete.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        return super().destroy(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        list = ListAnime.objects.get(id=kwargs['pk'])
+        if user_id != list.user.id:
+            return Response({'error': 'List can not be update.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return super().update(request, *args, **kwargs)
 
 
 class ListAnimeItemViewSet(ModelViewSet):
@@ -44,6 +70,22 @@ class ListAnimeItemViewSet(ModelViewSet):
         return ListAnimeItem.objects \
             .filter(list_id=self.kwargs['list_pk']) \
             .select_related('anime')
+    
+    def create(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        list = ListAnime.objects.get(id=kwargs['list_pk'])
+        if user_id != list.user.id:
+            return Response({'error': 'List item can not Add.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        return super().create(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        list_item = ListAnimeItem.objects.get(id=kwargs['pk'])
+        if user_id != list_item.list.user.id:
+            return Response({'error': 'List item can not delete.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        return super().destroy(request, *args, **kwargs)
 
 
 
@@ -51,14 +93,12 @@ class CommentViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
     queryset = Comment.objects.select_related('anime').all()
 
-
     def get_permissions(self):
         if self.request.method in ['POST', 'PATCH' ,'DELETE']:
             return [IsAuthenticated()]
         else:
             return []
     
-
     def get_serializer_class(self):
         if self.request.method in ['POST']:
             return PostCommentSerializer
@@ -66,7 +106,6 @@ class CommentViewSet(ModelViewSet):
             return UpdateCommentSerializer
         else:
             return CommentSerializer
-
 
     def get_serializer_context(self):
         user_id = self.request.user.id
@@ -80,6 +119,14 @@ class CommentViewSet(ModelViewSet):
             return Response({'error': 'Comment can not delete.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         return super().destroy(request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        user_id = self.request.user.id
+        Comment = Comment.objects.get(id=kwargs['pk'])
+        if user_id != Comment.user.id:
+            return Response({'error': 'Comment can not be update.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return super().update(request, *args, **kwargs)
+    
     
 
 
