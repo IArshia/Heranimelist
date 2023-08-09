@@ -9,9 +9,17 @@ class Anime(models.Model):
     score = models.DecimalField(max_digits=6, decimal_places=2)
     image_url = models.TextField(null=True)
 
+    def __str__(self) -> str:
+        return self.name
+    
+
 
 class ListAnime(models.Model):
+    name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class ListAnimeItem(models.Model):
@@ -28,6 +36,9 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
     content = models.TextField(max_length=1023)
+
+    def __str__(self) -> str:
+        return self.title
     
 
 
