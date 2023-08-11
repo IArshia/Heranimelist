@@ -21,5 +21,6 @@ urlpatterns = router.urls + listanime_router.urls
 # urlpatterns += animes_router.urls
 
 urlpatterns += [
-    path('animes/', views.AnimeView.as_view(), name='animes'),
+    path('animes/', views.AnimeListView.as_view(), name='animes'),
+    path('animes/<int:pk>/', views.AnimeDetailView.as_view(), name='anime-detail'),
 ]

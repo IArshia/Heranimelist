@@ -407,14 +407,13 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="row">
-                        {% for anime in object_list %}
+                        {% for anime in animes %}
                             <div class="col-md-4">
                                 <div class="mn-img">
                                     <img src={{anime.image_url}} />
                                     <div class="mn-title">
-                                        <a href="">Lorem ipsum dolor sit</a>
+                                        <a href="{% url 'anime-detail' anime.id %}">{{ anime.name }}</a>
                                     </div>
-                                    <p>{{ anime.name }}</p>
                                 </div>
                             </div>
                         {% endfor %}

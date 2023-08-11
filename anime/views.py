@@ -1,14 +1,15 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy, reverse
 from django.db.models.aggregates import Count
 from django.views.generic import ListView, DetailView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, renderers
-from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from anime.pagination import DefaultPagination
+from .forms import CommentForm
 from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSerializer, UpdateListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
 from .models import Anime, ListAnime, ListAnimeItem, Comment
 from .permissions import IsAdminOrReadOnly
@@ -24,15 +25,39 @@ class AnimeViewSet(ModelViewSet):
     ordering_fields = ['name', 'myanimelist_score', 'released_date']
 
 
-# class AnimeView(APIView):
-#     template_name = 'anime/index.html'
-#     renderer_classes = [renderers.TemplateHTMLRenderer]
-
-
-class AnimeView(ListView):
+class AnimeListView(ListView):
     model = Anime
-    template_name = 'anime/index.html'
+    template_name = 'anime/anime_list.html'
+    context_object_name = 'animes'
     paginate_by = 21
+
+
+class AnimeDetailView(DetailView):
+    model = Anime
+    template_name = 'anime/anime_detail.html'
+    form_class = CommentForm
+    context_object_name = 'anime'
+
+    def get_success_url(self):
+        return reverse("anime-detail", kwargs={"pk":self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(AnimeDetailView, self).get_context_data(**kwargs)
+        context["form"] = CommentForm(initial={"anime":self.object, "user":self.request.user})
+        return context
+
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            pass
+
+    def form_valid(self, form):
+        form.save()
+        return super(AnimeDetailView, self).form_valid(form)
+    
     
     
 class ListAnimeViewSet(ModelViewSet):
