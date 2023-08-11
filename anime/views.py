@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.db.models.aggregates import Count
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status, renderers
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework import status
 from anime.pagination import DefaultPagination
 from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSerializer, UpdateListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
 from .models import Anime, ListAnime, ListAnimeItem, Comment
@@ -21,6 +21,13 @@ class AnimeViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     search_fields = ['name', 'summery']
     ordering_fields = ['name', 'myanimelist_score', 'released_date']
+    template_name = 'anime/single-page.html'
+    renderer_classes = [renderers.TemplateHTMLRenderer]
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.queryset
+        # print(queryset)
+        return Response({'queryset': queryset})
 
     
 class ListAnimeViewSet(ModelViewSet):

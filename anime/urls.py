@@ -21,3 +21,7 @@ animes_router.register('comments', views.CommentViewSet, basename='anime-comment
 # carts_router.register('items', views.CartItemViewSet, basename='cart-items')
 
 urlpatterns = router.urls + listanime_router.urls + animes_router.urls
+
+# urlpatterns += [
+#     path('list_anime/', views.),
+# ]
