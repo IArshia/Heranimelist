@@ -23,42 +23,7 @@ class AnimeViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     pagination_class = DefaultPagination
     search_fields = ['name', 'summery']
-    ordering_fields = ['name', 'myanimelist_score', 'released_date']
-
-
-class AnimeListView(ListView):
-    model = Anime
-    template_name = 'anime/anime_list.html'
-    context_object_name = 'animes'
-    paginate_by = 21
-
-
-class AnimeDetailView(FormMixin, DetailView):
-    model = Anime
-    template_name = 'anime/anime_detail.html'
-    context_object_name = 'anime'
-    form_class = CommentForm
-
-    def get_success_url(self):
-        return reverse("anime-detail", kwargs={"pk":self.object.id})
-
-    def get_context_data(self, **kwargs):
-        context = super(AnimeDetailView, self).get_context_data(**kwargs)
-        context["form"] = CommentForm(initial={"anime":self.object, "user":self.request.user})
-        return context
-
-    def post(self, *args, **kwargs):
-        self.object = self.get_object()
-        form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            pass
-
-    def form_valid(self, form):
-        form.save()
-        return super(AnimeDetailView, self).form_valid(form)
-    
+    ordering_fields = ['name', 'myanimelist_score', 'released_date']  
     
     
 class ListAnimeViewSet(ModelViewSet):
@@ -172,6 +137,49 @@ class CommentViewSet(ModelViewSet):
     
     
 
+# Main Models
 
 
+class AnimeListView(ListView):
+    model = Anime
+    template_name = 'anime/anime_list.html'
+    context_object_name = 'animes'
+    paginate_by = 21
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        object_list = self.model.objects.all()
+        if query:
+            object_list = self.model.objects.filter(name__icontains=query)
+        return object_list
+    
+
+
+class AnimeDetailView(FormMixin, DetailView):
+    model = Anime
+    template_name = 'anime/anime_detail.html'
+    context_object_name = 'anime'
+    form_class = CommentForm
+
+    def get_success_url(self):
+        return reverse("anime-detail", kwargs={"pk":self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(AnimeDetailView, self).get_context_data(**kwargs)
+        context["form"] = CommentForm(initial={"anime":self.object, "user":self.request.user})
+        return context
+
+    def post(self, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            pass
+
+    def form_valid(self, form):
+        form.save()
+        return super(AnimeDetailView, self).form_valid(form)
+    
+  
 
