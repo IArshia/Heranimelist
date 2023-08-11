@@ -407,79 +407,17 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <p>queryset{{ anime }}</p>
-                                <img src="{% static 'anime/img/news-350x223-1.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
+                        {% for anime in object_list %}
+                            <div class="col-md-4">
+                                <div class="mn-img">
+                                    <img src={{anime.image_url}} />
+                                    <div class="mn-title">
+                                        <a href="">Lorem ipsum dolor sit</a>
+                                    </div>
+                                    <p>{{ anime.name }}</p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-1.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-1.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-1.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-1.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-1.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-2.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-3.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mn-img">
-                                <img src="{% static 'anime/img/news-350x223-4.jpg' %}" />
-                                <div class="mn-title">
-                                    <a href="">Lorem ipsum dolor sit</a>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -501,6 +439,25 @@
                     </div>
                 </div>
             </div>
+
+            <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+            
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+            
         </div>
     </div>
     <!-- Main News End-->

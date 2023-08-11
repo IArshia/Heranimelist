@@ -5,7 +5,7 @@ from . import views
 
 
 router = routers.DefaultRouter()
-router.register('animes', views.AnimeViewSet, basename='animes')
+# router.register('animes', views.AnimeViewSet, basename='animes')
 router.register('listanimes', views.ListAnimeViewSet, basename='listanimes')
 
 
@@ -13,15 +13,13 @@ listanime_router = routers.NestedDefaultRouter(router, 'listanimes', lookup='lis
 listanime_router.register('items', views.ListAnimeItemViewSet, basename='list-items')
 
 
-animes_router = routers.NestedDefaultRouter(router, 'animes', lookup='anime')
-animes_router.register('comments', views.CommentViewSet, basename='anime-comments')
+# animes_router = routers.NestedDefaultRouter(router, 'animes', lookup='anime')
+# animes_router.register('comments', views.CommentViewSet, basename='anime-comments')
 
 
-# carts_router = routers.NestedDefaultRouter(router, 'carts', lookup='cart')
-# carts_router.register('items', views.CartItemViewSet, basename='cart-items')
+urlpatterns = router.urls + listanime_router.urls 
+# urlpatterns += animes_router.urls
 
-urlpatterns = router.urls + listanime_router.urls + animes_router.urls
-
-# urlpatterns += [
-#     path('animes/', views.AnimeViewSet.as_view, name='animes'),
-# ]
+urlpatterns += [
+    path('animes/', views.AnimeView.as_view(), name='animes'),
+]
