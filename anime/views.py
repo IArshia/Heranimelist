@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.db.models.aggregates import Count
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, renderers
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -17,17 +17,15 @@ class AnimeViewSet(ModelViewSet):
     queryset = Anime.objects.prefetch_related('comments').all()
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    pagination_class = DefaultPagination
-    permission_classes = [IsAdminOrReadOnly]
+    # pagination_class = DefaultPagination
     search_fields = ['name', 'summery']
     ordering_fields = ['name', 'myanimelist_score', 'released_date']
-    template_name = 'anime/single-page.html'
     renderer_classes = [renderers.TemplateHTMLRenderer]
+    template_name='anime/index.html'
 
     def get(self, request, *args, **kwargs):
-        queryset = self.queryset
-        # print(queryset)
-        return Response({'queryset': queryset})
+        self.object = Anime.objects.prefetch_related('comments').all()
+        return Response({'anime': self.object})
 
     
 class ListAnimeViewSet(ModelViewSet):

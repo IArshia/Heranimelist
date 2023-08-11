@@ -23,5 +23,5 @@ animes_router.register('comments', views.CommentViewSet, basename='anime-comment
 urlpatterns = router.urls + listanime_router.urls + animes_router.urls
 
 # urlpatterns += [
-#     path('list_anime/', views.),
+#     path('animes/', views.AnimeViewSet.as_view, name='animes'),
 # ]

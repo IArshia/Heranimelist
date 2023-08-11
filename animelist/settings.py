@@ -142,6 +142,6 @@ DATABASES = {
          'NAME': 'heranimelist',
          'HOST': 'localhost',
          'USER': 'root',
-         'PASSWORD': 'Sh278137'
+         'PASSWORD': 'Iarshi4_1381'
      }
 }
