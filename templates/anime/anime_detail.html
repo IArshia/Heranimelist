@@ -35,6 +35,22 @@ Bootstrap News Template - Free HTML Templates
                             <p>
                                 {{anime.summery}}
                             </p>
+                            <h3>Comments</h3>
+                            <ul>
+                                {% for comment in anime.comments.all %}
+                                    <li>
+                                        {{comment.user}}:<br>
+                                        {{comment.content}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {% if user.is_authenticated %}
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    {{form.as_p}}
+                                    <input type="submit" value="send">
+                                </form>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="sn-related">

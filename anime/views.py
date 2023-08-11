@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.db.models.aggregates import Count
 from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, renderers
 from rest_framework.viewsets import ModelViewSet
@@ -32,11 +33,11 @@ class AnimeListView(ListView):
     paginate_by = 21
 
 
-class AnimeDetailView(DetailView):
+class AnimeDetailView(FormMixin, DetailView):
     model = Anime
     template_name = 'anime/anime_detail.html'
-    form_class = CommentForm
     context_object_name = 'anime'
+    form_class = CommentForm
 
     def get_success_url(self):
         return reverse("anime-detail", kwargs={"pk":self.object.id})
