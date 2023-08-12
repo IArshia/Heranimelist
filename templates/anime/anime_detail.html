@@ -1,9 +1,15 @@
 {% extends 'base_2.html' %}
 {% load static %}
 
+
 {% block title %}
 Bootstrap News Template - Free HTML Templates
 {% endblock title %}
+
+
+{% block anime %}
+<a href="{% url 'home' %}" class="nav-item nav-link active">{{anime.name}}</a>
+{% endblock anime %}
 
 
 {% block content %}
@@ -11,9 +17,9 @@ Bootstrap News Template - Free HTML Templates
     <div class="breadcrumb-wrap">
         <div class="container">
             <ul class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">News</a></li>
-                <li class="breadcrumb-item active">News details</li>
+                {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
+                <li class="breadcrumb-item"><a href="{% url 'animes' %}">Animes</a></li>
+                <li class="breadcrumb-item active">{{anime.name}}</li>
             </ul>
         </div>
     </div>
