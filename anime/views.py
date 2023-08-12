@@ -32,9 +32,7 @@ class AnimeViewSet(ModelViewSet):
     renderer_classes = [renderers.TemplateHTMLRenderer]
     template_name = 'anime/anime_list.html'
 
-    # def get_serializer_context(self):
-    #     print(self.queryset.all)
-    #     return super().get_serializer_context()
+    
     
 
     

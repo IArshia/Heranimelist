@@ -420,17 +420,21 @@
                         {% render_field field style=style %}
                         {% endif %}
                         {% endfor %}{% endcomment %}
-                        
-                        {% for anime in results %}
-                            <div class="col-md-4">
-                                <div class="mn-img">
-                                    <img src={{anime.image_url}} />
-                                    <div class="mn-title">
-                                        <a href="{% url 'animes-detail' anime.id %}">{{ anime.name }}</a>
+                        {% if results %}
+                            {% for anime in results %}
+                                <div class="col-md-4">
+                                    <div class="mn-img">
+                                        <img src={{anime.image_url}} />
+                                        <div class="mn-title">
+                                            <a href="{% url 'animes-detail' anime.id %}">{{ anime.name }}</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        {% comment %} {% elif %} {% endcomment %}
+
+                        {% endif %}
+                        
                     </div>
                 </div>
 
@@ -455,18 +459,16 @@
 
             <div class="pagination">
                 <span class="step-links">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; first</a>
-                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+                    {% if previous %}
+                        <a href="{{previous}}">previous</a>
                     {% endif %}
             
-                    <span class="current">
+                    {% comment %} <span class="current">
                         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span>
+                    </span> {% endcomment %}
             
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">last &raquo;</a>
+                    {% if next %}
+                        <a href="{{ next }}">next</a>
                     {% endif %}
                 </span>
             </div>
