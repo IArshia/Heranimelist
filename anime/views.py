@@ -8,8 +8,9 @@ from django.views.generic.edit import FormMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, renderers
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from anime.pagination import DefaultPagination
 from .forms import CommentForm, ListAnimeForm
@@ -17,6 +18,7 @@ from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSeria
 from .models import Anime, ListAnime, ListAnimeItem, Comment
 from .permissions import IsAdminOrReadOnly
 
+  
 
 class AnimeViewSet(ModelViewSet):
     serializer_class = AnimeSerializer
@@ -25,8 +27,16 @@ class AnimeViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     pagination_class = DefaultPagination
     search_fields = ['name', 'summery']
-    ordering_fields = ['name', 'myanimelist_score', 'released_date']  
+    ordering_fields = ['name', 'myanimelist_score', 'released_date']
+
+    renderer_classes = [renderers.TemplateHTMLRenderer]
+    template_name = 'anime/anime_list.html'
+
+    # def get_serializer_context(self):
+    #     print(self.queryset.all)
+    #     return super().get_serializer_context()
     
+
     
 class ListAnimeViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
@@ -137,7 +147,23 @@ class CommentViewSet(ModelViewSet):
             return Response({'error': 'Comment can not be update because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().update(request, *args, **kwargs)
     
+
+
+
+# class AnimeViewSet(ModelViewSet):
+#     serializer_class = AnimeSerializer
+#     queryset = Anime.objects.prefetch_related('comments').all()
+#     permission_classes = [IsAdminOrReadOnly]
+#     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+#     pagination_class = DefaultPagination
+#     search_fields = ['name', 'summery']
+#     ordering_fields = ['name', 'myanimelist_score', 'released_date']
     
+   
+
+
+
+
 
 # Main Models
 

@@ -6,7 +6,7 @@ from django.conf import settings
 class SimpleCommetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'title', 'content']
+        fields = ['id', 'user', 'content']
 
 
 class AnimeSerializer(serializers.ModelSerializer):
@@ -22,6 +22,7 @@ class ListAnimeItmeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListAnimeItem
         fields = ['id', 'anime']
+    
 
 
 class ListAnimeSerializer(serializers.ModelSerializer):
@@ -83,14 +84,14 @@ class AddListAnimeItemSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'anime', 'created_at', 'title', 'content']
+        fields = ['id', 'user', 'anime', 'created_at', 'content']
 
 
 
 class PostCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'title', 'content']
+        fields = ['id', 'content']
         
     def save(self, **kwargs):
         anime_id = self.context['anime_id']
@@ -103,6 +104,6 @@ class PostCommentSerializer(serializers.ModelSerializer):
 class UpdateCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['title', 'content']
+        fields = ['content']
 
 

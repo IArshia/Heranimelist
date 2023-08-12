@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-lg-3 col-md-4">
                         <div class="b-search">
-                            <form action="{% url 'animes' %}" method="get">
+                            <form action="{% url 'animes-list' %}" method="get">
                                 <input value="{{ request.GET.q }}" name='q' type="text" placeholder="Search">
                                 <button><i class="fa fa-search"></i></button>
                             </form>
@@ -98,7 +98,7 @@
 
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
-                            <a href="{% url 'animes' %}" class="nav-item nav-link {% block animes_link %}{% endblock animes_link %}">Animes</a>
+                            <a href="{% url 'animes-list' %}" class="nav-item nav-link {% block animes_link %}{% endblock animes_link %}">Animes</a>
                             {% block anime %}{% endblock anime %}
                             {% if user.is_authenticated %}
                             <a href="{% url 'list-anime' %}" class="nav-item nav-link {% block list_anime_link %}{% endblock list_anime_link %}">My List</a>

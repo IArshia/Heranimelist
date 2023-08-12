@@ -1,4 +1,5 @@
 {% extends 'base_2.html' %}
+{% load rest_framework %}
 {% load static %}
 
 
@@ -412,12 +413,20 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="row">
-                        {% for anime in animes %}
+                        {% comment %} {% for field in form %}
+                            {{field.name}}
+                            {{field.label_tag}}
+                        {% if not field.read_only %} 
+                        {% render_field field style=style %}
+                        {% endif %}
+                        {% endfor %}{% endcomment %}
+                        
+                        {% for anime in results %}
                             <div class="col-md-4">
                                 <div class="mn-img">
                                     <img src={{anime.image_url}} />
                                     <div class="mn-title">
-                                        <a href="{% url 'anime-detail' anime.id %}">{{ anime.name }}</a>
+                                        <a href="{% url 'animes-detail' anime.id %}">{{ anime.name }}</a>
                                     </div>
                                 </div>
                             </div>
