@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.db.models.aggregates import Count
@@ -10,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter, OrderingFilter
 from anime.pagination import DefaultPagination
-from .forms import CommentForm
+from .forms import CommentForm, ListAnimeForm
 from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSerializer, UpdateListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
 from .models import Anime, ListAnime, ListAnimeItem, Comment
 from .permissions import IsAdminOrReadOnly
@@ -181,5 +183,16 @@ class AnimeDetailView(FormMixin, DetailView):
         form.save()
         return super(AnimeDetailView, self).form_valid(form)
     
+
+class ListAnimeView(ListView):
+    model = ListAnime
+    template_name = 'anime/list_anime.html'
+    context_object_name = 'list_anime'
+
+    def get_queryset(self) -> QuerySet[Any]:
+        object_list = self.model.objects.filter(user=self.request.user)
+        return object_list
+
+
   
 

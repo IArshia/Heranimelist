@@ -21,6 +21,7 @@ from . import views
 # urlpatterns += animes_router.urls
 
 urlpatterns = [
-    path('', views.AnimeListView.as_view(), name='animes'),
-    path('<int:pk>/', views.AnimeDetailView.as_view(), name='anime-detail'),
+    path('animes/', views.AnimeListView.as_view(), name='animes'),
+    path('animes/<int:pk>/', views.AnimeDetailView.as_view(), name='anime-detail'),
+    path('my_list/', views.ListAnimeView.as_view(), name='list-anime'),
 ]

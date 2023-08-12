@@ -35,11 +35,10 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=50)
     content = models.TextField(max_length=1023)
 
     def __str__(self) -> str:
-        return self.title
+        return self.user
     
 
 

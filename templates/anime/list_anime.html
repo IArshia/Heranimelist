@@ -1,0 +1,73 @@
+{% extends 'base_2.html' %}
+{% load static %}
+
+
+{% block title %}My List{% endblock title %}
+
+
+{% block list_anime_link %}active{% endblock list_anime_link  %}
+
+
+{% block content %}
+
+    <!-- Main News Start-->
+    <div class="main-news">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        {% for list in list_animes %}
+                            <div class="col-md-4">
+                                <div class="mn-img">
+                                    <div class="mn-title">
+                                        <a href="">{{ list.name }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="mn-list">
+                        <h2>Read More</h2>
+                        <ul>
+                            <li><a href="">Lorem ipsum dolor sit amet</a></li>
+                            <li><a href="">Pellentesque tincidunt enim libero</a></li>
+                            <li><a href="">Morbi id finibus diam vel pretium enim</a></li>
+                            <li><a href="">Duis semper sapien in eros euismod sodales</a></li>
+                            <li><a href="">Vestibulum cursus lorem nibh</a></li>
+                            <li><a href="">Morbi ullamcorper vulputate metus non eleifend</a></li>
+                            <li><a href="">Etiam vitae elit felis sit amet</a></li>
+                            <li><a href="">Nullam congue massa vitae quam</a></li>
+                            <li><a href="">Proin sed ante rutrum</a></li>
+                            <li><a href="">Curabitur vel lectus</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} <div class="pagination">
+                <span class="step-links">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; first</a>
+                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+                    {% endif %}
+            
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span>
+            
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">last &raquo;</a>
+                    {% endif %}
+                </span>
+            </div> {% endcomment %}
+            
+        </div>
+    </div>
+    <!-- Main News End-->
+{% endblock content %}
+
+        

@@ -100,6 +100,9 @@
                         <div class="navbar-nav mr-auto">
                             <a href="{% url 'animes' %}" class="nav-item nav-link {% block animes_link %}{% endblock animes_link %}">Animes</a>
                             {% block anime %}{% endblock anime %}
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'list-anime' %}" class="nav-item nav-link {% block list_anime_link %}{% endblock list_anime_link %}">My List</a>
+                            {% endif %}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dropdown</a>
                                 <div class="dropdown-menu">  
