@@ -8,7 +8,7 @@ Bootstrap News Template - Free HTML Templates
 
 
 {% block anime %}
-<a href="{% url 'home' %}" class="nav-item nav-link active">{{anime.name}}</a>
+<a href="{% url 'home' %}" class="nav-item nav-link active">{{name}}</a>
 {% endblock anime %}
 
 
@@ -18,8 +18,8 @@ Bootstrap News Template - Free HTML Templates
         <div class="container">
             <ul class="breadcrumb">
                 {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
-                <li class="breadcrumb-item"><a href="{% url 'animes' %}">Animes</a></li>
-                <li class="breadcrumb-item active">{{anime.name}}</li>
+                <li class="breadcrumb-item"><a href="{% url 'animes-list' %}">Animes</a></li>
+                <li class="breadcrumb-item active">{{name}}</li>
             </ul>
         </div>
     </div>
@@ -32,18 +32,18 @@ Bootstrap News Template - Free HTML Templates
                 <div class="col-lg-8">
                     <div class="sn-container">
                         <div class="sn-img">
-                            <img src={{anime.image_url}} />
+                            <img src={{image_url}} />
                         </div>
                         <div class="sn-content">
-                            <h1 class="sn-title">{{anime.name}}</h1>
-                            <h3>MyAnimeList Score: {{anime.myanimelist_score}}</h3>
-                            <h3>Released Date: {{anime.released_date}}</h3>
+                            <h1 class="sn-title">{{name}}</h1>
+                            <h3>MyAnimeList Score: {{myanimelist_score}}</h3>
+                            <h3>Released Date: {{released_date}}</h3>
                             <p>
-                                {{anime.summery}}
+                                {{summery}}
                             </p>
                             <h4>Comments</h4>
                             <ul>
-                                {% for comment in anime.comments.all %}
+                                {% for comment in comments %}
                                     <li>
                                         {{comment.user}}:<br>
                                         {{comment.content}}

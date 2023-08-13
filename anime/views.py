@@ -30,7 +30,15 @@ class AnimeViewSet(ModelViewSet):
     ordering_fields = ['name', 'myanimelist_score', 'released_date']
 
     renderer_classes = [renderers.TemplateHTMLRenderer]
-    template_name = 'anime/anime_list.html'
+
+    def list(self, request, *args, **kwargs):
+        self.template_name = 'anime/anime_list.html'
+        return super().list(request, *args, **kwargs)
+    
+    def retrieve(self, request, *args, **kwargs):
+        self.template_name = 'anime/anime_detail.html'
+        return super().retrieve(request, *args, **kwargs)
+    
 
     
     
@@ -126,9 +134,9 @@ class CommentViewSet(ModelViewSet):
             return CommentSerializer
 
     def get_serializer_context(self):
-        user_id = self.request.user.id
+        user = self.request.user
         anime_id = self.kwargs['anime_pk']
-        return {'user_id':user_id, 'anime_id':anime_id}
+        return {'user':user, 'anime_id':anime_id}
     
     def destroy(self, request, *args, **kwargs):
         user_id = self.request.user.id

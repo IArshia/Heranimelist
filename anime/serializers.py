@@ -95,9 +95,9 @@ class PostCommentSerializer(serializers.ModelSerializer):
         
     def save(self, **kwargs):
         anime_id = self.context['anime_id']
-        user_id = self.context['user_id']
+        user = self.context['user']
         self.isinstance =  Comment.objects.create(
-            user_id=user_id, anime_id=anime_id, **self.validated_data)
+            user=user, anime_id=anime_id, **self.validated_data)
         return self.instance
 
 
