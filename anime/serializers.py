@@ -6,7 +6,12 @@ from django.conf import settings
 class SimpleCommetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'content']
+        fields = ['id', 'username', 'content']
+
+    username = serializers.SerializerMethodField()
+
+    def get_username(self, comment: Comment):
+        return comment.user.username
 
 
 class AnimeSerializer(serializers.ModelSerializer):

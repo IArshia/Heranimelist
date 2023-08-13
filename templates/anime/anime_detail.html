@@ -1,5 +1,6 @@
 {% extends 'base_2.html' %}
 {% load static %}
+{% load rest_framework %}
 
 
 {% block title %}
@@ -41,22 +42,37 @@ Bootstrap News Template - Free HTML Templates
                             <p>
                                 {{summery}}
                             </p>
-                            <h4>Comments</h4>
-                            <ul>
-                                {% for comment in comments %}
-                                    <li>
-                                        {{comment.user}}:<br>
-                                        {{comment.content}}
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                            {% if comments %}
+                                <h4>Comments</h4>
+                                <ul>
+                                    {% for comment in comments %}
+                                        <li>
+                                            {{comment.username}}:<br>
+                                            {{comment.content}}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% comment %} <div class="tab-pane" id="post-object-form">
+                                {% with form=post_form %}
+                                <form action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                                    <fieldset>
+                                    {% csrf_token %}
+                                    {{ post_form }}
+                                    <div class="form-actions">
+                                        <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
+                                    </div>
+                                    </fieldset>
+                                </form>
+                                {% endwith %}
+                            </div>
                             {% if user.is_authenticated %}
-                                <form action="" method="post">
+                                <form action="/anime/animes/1/comments/" method="post">
                                     {% csrf_token %}
                                     {{form.as_p}}
                                     <input type="submit" value="send">
                                 </form>
-                            {% endif %}
+                            {% endif %} {% endcomment %}
                         </div>
                     </div>
                     <div class="sn-related">
