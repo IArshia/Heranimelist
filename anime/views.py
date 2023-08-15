@@ -118,7 +118,9 @@ class ListAnimeItemViewSet(ModelViewSet):
 
 class CommentViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
-    queryset = Comment.objects.select_related('anime').all()
+
+    def get_queryset(self):
+        return Comment.objects.filter(anime_id=self.kwargs['anime_pk']).all()
 
     def get_permissions(self):
         if self.request.method in ['POST', 'PATCH' ,'DELETE']:
