@@ -89,8 +89,12 @@ class AddListAnimeItemSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'anime', 'created_at', 'content']
+        fields = ['id', 'username', 'anime', 'created_at', 'content']
 
+    username = serializers.SerializerMethodField()
+
+    def get_username(self, comment: Comment):
+        return comment.user.username
 
 
 class PostCommentSerializer(serializers.ModelSerializer):

@@ -18,7 +18,7 @@ from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSeria
 from .models import Anime, ListAnime, ListAnimeItem, Comment
 from .permissions import IsAdminOrReadOnly
 
-  
+
 
 class AnimeViewSet(ModelViewSet):
     serializer_class = AnimeSerializer
@@ -38,6 +38,8 @@ class AnimeViewSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         self.template_name = 'anime/anime_detail.html'
         return super().retrieve(request, *args, **kwargs)
+    
+    
     
     
 
@@ -118,6 +120,9 @@ class ListAnimeItemViewSet(ModelViewSet):
 
 class CommentViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    pagination_class = DefaultPagination
+
+    renderer_classes = [renderers.TemplateHTMLRenderer]
 
     def get_queryset(self):
         return Comment.objects.filter(anime_id=self.kwargs['anime_pk']).all()
@@ -155,6 +160,14 @@ class CommentViewSet(ModelViewSet):
         if user_id != Comment.user.id:
             return Response({'error': 'Comment can not be update because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().update(request, *args, **kwargs)
+    
+    def list(self, request, *args, **kwargs):
+        self.template_name = 'anime/anime_comments_list.html'
+        return super().list(request, *args, **kwargs)
+    
+    
+    
+
 
 
 

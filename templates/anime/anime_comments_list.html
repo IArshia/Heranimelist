@@ -20,7 +20,7 @@ Bootstrap News Template - Free HTML Templates
             <ul class="breadcrumb">
                 {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
                 <li class="breadcrumb-item"><a href="{% url 'animes-list' %}">Animes</a></li>
-                <li class="breadcrumb-item active">{{name}}</li>
+                <li class="breadcrumb-item active"></li>
             </ul>
         </div>
     </div>
@@ -32,30 +32,19 @@ Bootstrap News Template - Free HTML Templates
             <div class="row">
                 <div class="col-lg-8">
                     <div class="sn-container">
-                        <div class="sn-img">
-                            <img src={{image_url}} />
-                        </div>
                         <div class="sn-content">
-                            <h1 class="sn-title">{{name}}</h1>
-                            <h3>MyAnimeList Score: {{myanimelist_score}}</h3>
-                            <h3>Released Date: {{released_date}}</h3>
-                            <p>
-                                {{summery}}
-                            </p>
-                            {% if comments %}
-                                <h4>Comments</h4>
-                                <ul>
-                                    {% for comment in comments %}
-                                        <li>
-                                            {{comment.username}}:<br>
-                                            {{comment.content}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            {% if user.is_authenticated %}
+                            <h4>Comments</h4>
+                            <ul>
+                                {% for comment in results %}
+                                    <li>
+                                        {{comment.username}}:<br>
+                                        {{comment.content}}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            {% comment %} {% if user.is_authenticated %}
                                 <a href="{% url 'anime-comments-list' id %}">Add Comment</a>
-                            {% endif %}
+                            {% endif %} {% endcomment %}
                             {% comment %} <div class="tab-pane" id="post-object-form">
                                 {% with form=post_form %}
                                 <form action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>

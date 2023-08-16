@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 from django.conf import settings
 
@@ -38,7 +39,7 @@ class Comment(models.Model):
     content = models.TextField(max_length=1023)
 
     def __str__(self) -> str:
-        return self.user
+        return self.user.username
     
 
 
