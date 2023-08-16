@@ -666,7 +666,8 @@ button.btn:hover {
 }
 
 .main-news .mn-img img {
-    width: 100%;
+    width: 210px;
+    height: 305px;
 }
 
 .main-news .mn-img:hover img {
@@ -784,7 +785,8 @@ button.btn:hover {
 }
 
 .single-news .sn-img img {
-    width: 100%;
+    width: 500px;
+    height: 720px;
 }
 
 .single-news .sn-content {

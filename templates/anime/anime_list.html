@@ -424,7 +424,7 @@
                             {% for anime in results %}
                                 <div class="col-md-4">
                                     <div class="mn-img">
-                                        <img src={{anime.image_url}} />
+                                        <img src={{anime.image_url}}/>
                                         <div class="mn-title">
                                             <a href="{% url 'animes-detail' anime.id %}">{{ anime.name }}</a>
                                         </div>
