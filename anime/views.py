@@ -45,6 +45,7 @@ class AnimeViewSet(ModelViewSet):
     
 class ListAnimeViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
+    renderer_classes = [renderers.TemplateHTMLRenderer]
 
     def get_queryset(self):
         return ListAnime.objects.filter(user_id=self.request.user.id).all()
@@ -81,6 +82,26 @@ class ListAnimeViewSet(ModelViewSet):
             return Response({'error': 'List can not be update because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().update(request, *args, **kwargs)
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        self.template_name = 'anime/list_anime_list.html'
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        serializer_2 = AddListAnimeSerializer()
+        return Response({'serializer': serializer_2, 'lists': serializer.data})
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return redirect('listanimes-list')
+    
 
 
 class ListAnimeItemViewSet(ModelViewSet):
@@ -92,14 +113,14 @@ class ListAnimeItemViewSet(ModelViewSet):
         return ListAnimeItmeSerializer
 
     def get_serializer_context(self):
-        return {'list_id': self.kwargs['listanimes_pk']}
+        return {'list_id': self.kwargs['list_pk']}
 
     def get_queryset(self):
-        return ListAnimeItem.objects.filter(list_id=self.kwargs['listanimes_pk']).all()
+        return ListAnimeItem.objects.filter(list_id=self.kwargs['list_pk']).all()
     
     def create(self, request, *args, **kwargs):
         user_id = self.request.user.id
-        list = ListAnime.objects.get(id=kwargs['listanimes_pk'])
+        list = ListAnime.objects.get(id=kwargs['list_pk'])
         if user_id != list.user.id:
             return Response({'error': 'List item can not add because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 

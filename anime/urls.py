@@ -9,7 +9,7 @@ router.register('animes', views.AnimeViewSet, basename='animes')
 router.register('listanimes', views.ListAnimeViewSet, basename='listanimes')
 
 
-listanime_router = routers.NestedDefaultRouter(router, 'listanimes', lookup='listanimes')
+listanime_router = routers.NestedDefaultRouter(router, 'listanimes', lookup='list')
 listanime_router.register('items', views.ListAnimeItemViewSet, basename='list-items')
 
 

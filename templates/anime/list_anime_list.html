@@ -1,0 +1,117 @@
+{% extends 'base_2.html' %}
+{% load rest_framework %}
+{% load static %}
+
+
+{% block title %}Animes{% endblock title %}
+
+
+{% block list_anime_link %}active{% endblock list_anime_link  %}
+
+
+{% block content %}
+    <!-- Breadcrumb Start -->
+    <div class="breadcrumb-wrap">
+        <div class="container">
+            <ul class="breadcrumb">
+                {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
+                <li class="breadcrumb-item"><a href="{% url 'listanimes-list' %}">Mylist</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Main News Start-->
+    <div class="main-news">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row">
+                        {% comment %} {% for field in form %}
+                            {{field.name}}
+                            {{field.label_tag}}
+                        {% if not field.read_only %} 
+                        {% render_field field style=style %}
+                        {% endif %}
+                        {% endfor %}{% endcomment %}
+                        {% if lists %}
+                            {% for list in lists %}
+                                <div class="col-md-4">
+                                    <div class="mn-img">
+                                        {% if list.items.0.anime.image_url %}
+                                            <img src={{list.items.0.anime.image_url}}/>
+                                        {% else %}
+                                            <img src="{% static 'images/none.png' %}"/>
+                                        {% endif %}
+                                        
+                                        <div class="mn-title">
+                                            <a href="{% url 'listanimes-detail' list.id %}">{{list.name}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        
+
+                        
+                        
+                    </div>
+                    {% if user.is_authenticated %}
+                        {% if serializer %}
+                            <form action="{% url 'listanimes-list' %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                                <fieldset>
+                                {% csrf_token %}
+                                {% render_form serializer %}
+                                <div class="form-actions">
+                                    <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ list.items.anime.name }} resource">POST</button>
+                                </div>
+                                </fieldset>
+                            </form>
+                        {% endif %}
+                        {% comment %} <a href="{% url 'anime-comments-list' list.id %}">Add Comment</a> {% endcomment %}
+                    {% endif %}
+                </div>
+
+                <div class="col-lg-3">
+                    <div class="mn-list">
+                        <h2>Read More</h2>
+                        <ul>
+                            <li><a href="">Lorem ipsum dolor sit amet</a></li>
+                            <li><a href="">Pellentesque tincidunt enim libero</a></li>
+                            <li><a href="">Morbi id finibus diam vel pretium enim</a></li>
+                            <li><a href="">Duis semper sapien in eros euismod sodales</a></li>
+                            <li><a href="">Vestibulum cursus lorem nibh</a></li>
+                            <li><a href="">Morbi ullamcorper vulputate metus non eleifend</a></li>
+                            <li><a href="">Etiam vitae elit felis sit amet</a></li>
+                            <li><a href="">Nullam congue massa vitae quam</a></li>
+                            <li><a href="">Proin sed ante rutrum</a></li>
+                            <li><a href="">Curabitur vel lectus</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pagination">
+                <span class="step-links">
+                    {% if previous %}
+                        <a href="{{previous}}">previous</a>
+                    {% endif %}
+            
+                    {% comment %} <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                    </span> {% endcomment %}
+            
+                    {% if next %}
+                        <a href="{{ next }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+            
+        </div>
+    </div>
+    <!-- Main News End-->
+{% endblock content %}
+
+        
+
+

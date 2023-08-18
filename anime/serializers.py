@@ -22,8 +22,15 @@ class AnimeSerializer(serializers.ModelSerializer):
 
 
 
+class SimpleAnimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Anime
+        fields = ['id', 'name', 'summery', 'myanimelist_score', 'score', 'released_date', 'image_url']
+
+
+
 class ListAnimeItmeSerializer(serializers.ModelSerializer):
-    anime = AnimeSerializer()
+    anime = SimpleAnimeSerializer()
     class Meta:
         model = ListAnimeItem
         fields = ['id', 'anime']
