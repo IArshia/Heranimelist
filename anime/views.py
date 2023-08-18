@@ -45,8 +45,6 @@ class AnimeViewSet(ModelViewSet):
 
 
     
-
-    
 class ListAnimeViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
     queryset = ListAnime.objects.select_related('user').all()
@@ -82,6 +80,7 @@ class ListAnimeViewSet(ModelViewSet):
         if user_id != list.user.id:
             return Response({'error': 'List can not be update because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().update(request, *args, **kwargs)
+
 
 
 class ListAnimeItemViewSet(ModelViewSet):
