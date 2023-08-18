@@ -95,6 +95,13 @@ class ListAnimeViewSet(ModelViewSet):
         serializer_2 = AddListAnimeSerializer()
         return Response({'serializer': serializer_2, 'lists': serializer.data})
     
+    def retrieve(self, request, *args, **kwargs):
+        self.template_name = 'anime/list_anime_detail.html'
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        serializer_2 = AddListAnimeItemSerializer()
+        return Response({'serializer': serializer_2, 'list': serializer.data})
+    
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -124,7 +131,11 @@ class ListAnimeItemViewSet(ModelViewSet):
         if user_id != list.user.id:
             return Response({'error': 'List item can not add because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        return super().create(request, *args, **kwargs)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return redirect('listanimes-detail', self.kwargs['list_pk'])
 
     def destroy(self, request, *args, **kwargs):
         user_id = self.request.user.id

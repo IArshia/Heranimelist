@@ -8,9 +8,9 @@ Bootstrap News Template - Free HTML Templates
 {% endblock title %}
 
 
-{% block anime %}
-<a href="{% url 'animes-detail' anime.id %}" class="nav-item nav-link active">{{anime.name}}</a>
-{% endblock anime %}
+{% block list %}
+<a href="{% url 'listanimes-detail' list.id %}" class="nav-item nav-link active">{{list.name}}</a>
+{% endblock list %}
 
 
 {% block content %}
@@ -19,8 +19,8 @@ Bootstrap News Template - Free HTML Templates
         <div class="container">
             <ul class="breadcrumb">
                 {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
-                <li class="breadcrumb-item"><a href="{% url 'animes-list' %}">Animes</a></li>
-                <li class="breadcrumb-item active">{{anime.name}}</li>
+                <li class="breadcrumb-item"><a href="{% url 'listanimes-list' %}">My list</a></li>
+                <li class="breadcrumb-item active">{{list.name}}</li>
             </ul>
         </div>
     </div>
@@ -30,45 +30,34 @@ Bootstrap News Template - Free HTML Templates
     <div class="single-news">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8">
-                    <div class="sn-container">
-                        <div class="sn-img">
-                            <img src={{anime.image_url}} />
-                        </div>
-                        <div class="sn-content">
-                            <h1 class="sn-title">{{anime.name}}</h1>
-                            <h3>MyAnimeList Score: {{anime.myanimelist_score}}</h3>
-                            <h3>Released Date: {{anime.released_date}}</h3>
-                            <p>
-                                {{anime.summery}}
-                            </p>
-                            {% if anime.comments %}
-                                <h4>Comments</h4>
-                                <ul>
-                                    {% for comment in anime.comments %}
-                                        <li>
-                                            {{comment.username}}:<br>
-                                            {{comment.content}}
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                            {% if user.is_authenticated %}
-                                {% if serializer %}
-                                    <form action="{% url 'anime-comments-list' anime.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
-                                        <fieldset>
-                                        {% csrf_token %}
-                                        {% render_form serializer %}
-                                        <div class="form-actions">
-                                            <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
-                                        </div>
-                                        </fieldset>
-                                    </form>
-                                {% endif %}
-                                {% comment %} <a href="{% url 'anime-comments-list' anime.id %}">Add Comment</a> {% endcomment %}
-                            {% endif %}
-                        </div>
+                <div class="col-lg-9">
+                    <div class="row">
+                        {% for anime in list.items %}
+                            <div class="col-md-4">
+                                <div class="mn-img">
+                                    <img src={{anime.anime.image_url}} />
+                                </div>
+                                <div class="mn-title">
+                                    <a href="{% url 'list-items-detail' list.id anime.id %}">{{anime.anime.name}}</a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
                     </div>
+                    {% if user.is_authenticated %}
+                        {% if serializer %}
+                            <form action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                                <fieldset>
+                                {% csrf_token %}
+                                {% render_form serializer %}
+                                <div class="form-actions">
+                                    <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
+                                </div>
+                                </fieldset>
+                            </form>
+                        {% endif %}
+                        {% comment %} <a href="{% url 'anime-comments-list' list.id %}">Add Comment</a> {% endcomment %}
+                    {% endif %}
                     
                 </div>
 

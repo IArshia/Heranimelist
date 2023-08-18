@@ -102,6 +102,7 @@
                             {% block anime %}{% endblock anime %}
                             {% if user.is_authenticated %}
                             <a href="{% url 'listanimes-list' %}" class="nav-item nav-link {% block list_anime_link %}{% endblock list_anime_link %}">My List</a>
+                            {% block list %}{% endblock list %}
                             {% endif %}
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Dropdown</a>
