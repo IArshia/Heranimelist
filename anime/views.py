@@ -2,7 +2,6 @@ from django.db.models.query import QuerySet
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.db.models.aggregates import Count
-from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, renderers
@@ -12,7 +11,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from anime.pagination import DefaultPagination
-from .forms import CommentForm, ListAnimeForm
 from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSerializer, UpdateListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
 from .models import Anime, ListAnime, ListAnimeItem, Comment
 from .permissions import IsAdminOrReadOnly
@@ -47,7 +45,9 @@ class AnimeViewSet(ModelViewSet):
     
 class ListAnimeViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
-    queryset = ListAnime.objects.select_related('user').all()
+
+    def get_queryset(self):
+        return ListAnime.objects.filter(user_id=self.request.user.id).all()
 
     def get_permissions(self):
         if self.request.method in ['POST', 'PATCH' ,'DELETE']:
@@ -92,16 +92,14 @@ class ListAnimeItemViewSet(ModelViewSet):
         return ListAnimeItmeSerializer
 
     def get_serializer_context(self):
-        return {'list_id': self.kwargs['list_pk']}
+        return {'list_id': self.kwargs['listanimes_pk']}
 
     def get_queryset(self):
-        return ListAnimeItem.objects \
-            .filter(list_id=self.kwargs['list_pk']) \
-            .select_related('anime')
+        return ListAnimeItem.objects.filter(list_id=self.kwargs['listanimes_pk']).all()
     
     def create(self, request, *args, **kwargs):
         user_id = self.request.user.id
-        list = ListAnime.objects.get(id=kwargs['list_pk'])
+        list = ListAnime.objects.get(id=kwargs['listanimes_pk'])
         if user_id != list.user.id:
             return Response({'error': 'List item can not add because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
