@@ -1,6 +1,5 @@
-from typing import Any
 from django.db.models.query import QuerySet
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.db.models.aggregates import Count
 from django.views.generic import ListView, DetailView
@@ -28,6 +27,7 @@ class AnimeViewSet(ModelViewSet):
     pagination_class = DefaultPagination
     search_fields = ['name', 'summery']
     ordering_fields = ['name', 'myanimelist_score', 'released_date']
+    ordering = ['id']
 
     renderer_classes = [renderers.TemplateHTMLRenderer]
 
@@ -37,13 +37,13 @@ class AnimeViewSet(ModelViewSet):
     
     def retrieve(self, request, *args, **kwargs):
         self.template_name = 'anime/anime_detail.html'
-        return super().retrieve(request, *args, **kwargs)
-    
-    
-    
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        serializer_2 = PostCommentSerializer()
+        return Response({'serializer': serializer_2, 'anime': serializer.data})
     
 
-    
+
     
 
     
@@ -120,7 +120,9 @@ class ListAnimeItemViewSet(ModelViewSet):
 
 class CommentViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
-    pagination_class = DefaultPagination
+    # pagination_class = DefaultPagination
+    filter_backends = [OrderingFilter]
+    ordering = ['id']
 
     renderer_classes = [renderers.TemplateHTMLRenderer]
 
@@ -161,15 +163,34 @@ class CommentViewSet(ModelViewSet):
             return Response({'error': 'Comment can not be update because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         return super().update(request, *args, **kwargs)
     
+
     def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
         self.template_name = 'anime/anime_comments_list.html'
-        return super().list(request, *args, **kwargs)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        serializer_2 = PostCommentSerializer()
+        return Response({'serializer': serializer_2, 'results': serializer.data})
+    
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+
+        return redirect('animes-detail', self.kwargs['anime_pk'])
+    
     
     
     
 
 
-
+# ApiViews
 
 
 

@@ -9,7 +9,7 @@ Bootstrap News Template - Free HTML Templates
 
 
 {% block anime %}
-<a href="{% url 'home' %}" class="nav-item nav-link active">{{name}}</a>
+<a href="{% url 'home' %}" class="nav-item nav-link active">{{anime.name}}</a>
 {% endblock anime %}
 
 
@@ -20,7 +20,7 @@ Bootstrap News Template - Free HTML Templates
             <ul class="breadcrumb">
                 {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
                 <li class="breadcrumb-item"><a href="{% url 'animes-list' %}">Animes</a></li>
-                <li class="breadcrumb-item active">{{name}}</li>
+                <li class="breadcrumb-item active">{{anime.name}}</li>
             </ul>
         </div>
     </div>
@@ -33,19 +33,19 @@ Bootstrap News Template - Free HTML Templates
                 <div class="col-lg-8">
                     <div class="sn-container">
                         <div class="sn-img">
-                            <img src={{image_url}} />
+                            <img src={{anime.image_url}} />
                         </div>
                         <div class="sn-content">
-                            <h1 class="sn-title">{{name}}</h1>
-                            <h3>MyAnimeList Score: {{myanimelist_score}}</h3>
-                            <h3>Released Date: {{released_date}}</h3>
+                            <h1 class="sn-title">{{anime.name}}</h1>
+                            <h3>MyAnimeList Score: {{anime.myanimelist_score}}</h3>
+                            <h3>Released Date: {{anime.released_date}}</h3>
                             <p>
-                                {{summery}}
+                                {{anime.summery}}
                             </p>
-                            {% if comments %}
+                            {% if anime.comments %}
                                 <h4>Comments</h4>
                                 <ul>
-                                    {% for comment in comments %}
+                                    {% for comment in anime.comments %}
                                         <li>
                                             {{comment.username}}:<br>
                                             {{comment.content}}
@@ -54,21 +54,19 @@ Bootstrap News Template - Free HTML Templates
                                 </ul>
                             {% endif %}
                             {% if user.is_authenticated %}
-                                <a href="{% url 'anime-comments-list' id %}">Add Comment</a>
+                                {% if serializer %}
+                                    <form action="{% url 'anime-comments-list' anime.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                                        <fieldset>
+                                        {% csrf_token %}
+                                        {% render_form serializer %}
+                                        <div class="form-actions">
+                                            <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
+                                        </div>
+                                        </fieldset>
+                                    </form>
+                                {% endif %}
+                                {% comment %} <a href="{% url 'anime-comments-list' anime.id %}">Add Comment</a> {% endcomment %}
                             {% endif %}
-                            {% comment %} <div class="tab-pane" id="post-object-form">
-                                {% with form=post_form %}
-                                <form action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
-                                    <fieldset>
-                                    {% csrf_token %}
-                                    {{ post_form }}
-                                    <div class="form-actions">
-                                        <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
-                                    </div>
-                                    </fieldset>
-                                </form>
-                                {% endwith %}
-                            </div> {% endcomment %}
                         </div>
                     </div>
                     

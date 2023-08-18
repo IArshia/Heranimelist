@@ -45,19 +45,17 @@ Bootstrap News Template - Free HTML Templates
                             {% comment %} {% if user.is_authenticated %}
                                 <a href="{% url 'anime-comments-list' id %}">Add Comment</a>
                             {% endif %} {% endcomment %}
-                            {% comment %} <div class="tab-pane" id="post-object-form">
-                                {% with form=post_form %}
+                            {% if serializer %}
                                 <form action="{{ request.get_full_path }}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
                                     <fieldset>
                                     {% csrf_token %}
-                                    {{ post_form }}
+                                    {% render_form serializer %}
                                     <div class="form-actions">
                                         <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
                                     </div>
                                     </fieldset>
                                 </form>
-                                {% endwith %}
-                            </div> {% endcomment %}
+                            {% endif %}
                         </div>
                     </div>
                     
