@@ -19,7 +19,7 @@ Bootstrap News Template - Free HTML Templates
         <div class="container">
             <ul class="breadcrumb">
                 {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
-                <li class="breadcrumb-item"><a href="{% url 'listanimes-list' %}">My list</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'listanimes-list' %}">My List</a></li>
                 <li class="breadcrumb-item active">{{list.name}}</li>
             </ul>
         </div>
@@ -27,7 +27,7 @@ Bootstrap News Template - Free HTML Templates
     <!-- Breadcrumb End -->
     
     <!-- Single News Start-->
-    <div class="single-news">
+    <div class="main-news">
         <div class="container">
             <div class="row">
                 <div class="col-lg-9">
@@ -36,9 +36,9 @@ Bootstrap News Template - Free HTML Templates
                             <div class="col-md-4">
                                 <div class="mn-img">
                                     <img src={{item.anime.image_url}} />
-                                </div>
-                                <div class="mn-title">
-                                    <a href="{% url 'animes-detail' item.anime.id %}">{{item.anime.name}}</a>
+                                    <div class="mn-title">
+                                        <a href="{% url 'animes-detail' item.anime.id %}">{{item.anime.name}}</a>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}

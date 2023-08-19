@@ -8,8 +8,8 @@
 
 {% block animes_link %}active{% endblock animes_link  %}
 
-
 {% block content %}
+{% comment %} 
     <!-- Top News Start-->
     <div class="top-news">
         <div class="container">
@@ -405,7 +405,19 @@
             </div>
         </div>
     </div>
-    <!-- Tab News Start-->
+    <!-- Tab News Start--> {% endcomment %}
+
+    <!-- Breadcrumb Start -->
+    <div class="breadcrumb-wrap">
+        <div class="container">
+            <ul class="breadcrumb">
+                {% comment %} <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li> {% endcomment %}
+                <li class="breadcrumb-item"><a href="{% url 'animes-list' %}">Animes</a></li>
+                {% comment %} <li class="breadcrumb-item active">{{anime.name}}</li> {% endcomment %}
+            </ul>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
 
     <!-- Main News Start-->
     <div class="main-news">
