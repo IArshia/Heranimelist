@@ -37,8 +37,8 @@ class AnimeViewSet(ModelViewSet):
         self.template_name = 'anime/anime_detail.html'
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        querySet_list = ListAnime.objects.filter(user=self.request.user).all()
-        serializer_list = ListAnimeSerializer(querySet_list, many=True)
+        queryset_list = ListAnime.objects.filter(user=self.request.user).all()
+        serializer_list = ListAnimeSerializer(queryset_list, many=True)
         serializer_comment = PostCommentSerializer()
         serializer_item = AddListAnimeItemSerializer({'anime_id': self.kwargs['pk']})
         return Response({
@@ -48,7 +48,6 @@ class AnimeViewSet(ModelViewSet):
             'lists': serializer_list.data
             })
 
-    
 
 
     
@@ -122,6 +121,7 @@ class ListAnimeViewSet(ModelViewSet):
 
 class ListAnimeItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'delete']
+    renderer_classes = [renderers.TemplateHTMLRenderer]
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -144,17 +144,30 @@ class ListAnimeItemViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        print(request.data)
         # return redirect('listanimes-detail', self.kwargs['list_pk'])
         return redirect('animes-detail', request.data['anime_id'])
 
     def destroy(self, request, *args, **kwargs):
+        self.template_name = 'anime/anime_detail.html'
         user_id = self.request.user.id
-        list_item = ListAnimeItem.objects.get(id=kwargs['pk'])
+        list_item = self.get_object()
         if user_id != list_item.list.user.id:
             return Response({'error': 'List item can not delete because this is not for you.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-        return super().destroy(request, *args, **kwargs)
+        
+        anime_id = ListAnimeItem.objects.get(id=self.kwargs['pk']).anime.id
+        self.perform_destroy(list_item)
+        anime = Anime.objects.get(id=anime_id)
+        serializer = AnimeSerializer(anime)
+        queryset_list = ListAnime.objects.filter(user=self.request.user).all()
+        serializer_list = ListAnimeSerializer(queryset_list, many=True)
+        serializer_comment = PostCommentSerializer()
+        serializer_item = AddListAnimeItemSerializer({'anime_id': self.kwargs['pk']})
+        return Response({
+            'serializer': serializer_comment, 
+            'serializer_item':serializer_item, 
+            'anime': serializer.data, 
+            'lists': serializer_list.data
+            })
 
 
 

@@ -46,34 +46,32 @@ Bootstrap News Template - Free HTML Templates
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Add List</a>
                                 
-                                <div class="dropdown-menu">
+                                <div class="dropdown-menu" style='width: 300px;'>
                                     {% for list in lists %}
-                                        <div class='tags'>
+                                        <div class='tags' style='display: flex; padding: 0.5rem;'>
                                             <a class="dropdown-item-2" href="{% url 'listanimes-detail' list.id %}">{{list.name}}</a>
                                             {% with flag='True' %}
                                                 {% for item in list.items %}
                                                     {% if anime.id == item.anime.id %}
-                                                        <a href="">Remove</a>
+                                                        <form class="button-form" action="{% url 'list-items-detail' list.id item.id %}" data-method="DELETE">
+                                                            <button class="btn btn-danger">Remove</button>
+                                                        </form>
                                                         {% update_variable 'False' as flag %}
                                                     {% endif %}
                                                     {% if flag == 'True' and item == list.items|last %}
                                                         <form class='form-add-list' action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
-                                                            <fieldset>
-                                                                {% csrf_token %}
-                                                                <input name="anime_id" type="hidden" value="{{anime.id}}">
-                                                                <button class="btn btn-primary js-tooltip">Add</button>
-                                                            </fieldset>
+                                                            {% csrf_token %}
+                                                            <input name="anime_id" type="hidden" value="{{anime.id}}">
+                                                            <button class="btn btn-primary js-tooltip">Add</button>
                                                         </form>
                                                     {% endif %}
                                                 {% endfor %}
                                             {% endwith %}
                                             {% if not list.items %}
                                                 <form action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
-                                                    <fieldset>
-                                                        {% csrf_token %}
-                                                        <input name="anime_id" type="hidden" value="{{anime.id}}">
-                                                        <button class="btn btn-primary js-tooltip">Add</button>
-                                                    </fieldset>
+                                                    {% csrf_token %}
+                                                    <input name="anime_id" type="hidden" value="{{anime.id}}">
+                                                    <button class="btn btn-primary js-tooltip">Add</button>
                                                 </form>
                                             {% endif %}
                                         </div>
