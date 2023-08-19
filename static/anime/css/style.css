@@ -304,6 +304,23 @@ button.btn:hover {
     background: #f8f9fa;
 }
 
+.dropdown-menu .dropdown-item-2{
+    display: inline-table;
+    width: 60%;
+    padding: 0.25rem 1rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+
+.dropdown-menu .form-add-list{
+    display: inline-table;
+}
+
 @media (min-width: 768px) {
     .nav-bar,
     .nav-bar .navbar {

@@ -37,8 +37,17 @@ class AnimeViewSet(ModelViewSet):
         self.template_name = 'anime/anime_detail.html'
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        serializer_2 = PostCommentSerializer()
-        return Response({'serializer': serializer_2, 'anime': serializer.data})
+        querySet_list = ListAnime.objects.filter(user=self.request.user).all()
+        serializer_list = ListAnimeSerializer(querySet_list, many=True)
+        serializer_comment = PostCommentSerializer()
+        serializer_item = AddListAnimeItemSerializer({'anime_id': self.kwargs['pk']})
+        return Response({
+            'serializer': serializer_comment, 
+            'serializer_item':serializer_item, 
+            'anime': serializer.data, 
+            'lists': serializer_list.data
+            })
+
     
 
 
@@ -99,8 +108,8 @@ class ListAnimeViewSet(ModelViewSet):
         self.template_name = 'anime/list_anime_detail.html'
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        serializer_2 = AddListAnimeItemSerializer()
-        return Response({'serializer': serializer_2, 'list': serializer.data})
+        serializer_item = AddListAnimeItemSerializer()
+        return Response({'serializer': serializer_item, 'list': serializer.data})
     
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -135,7 +144,9 @@ class ListAnimeItemViewSet(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
 
-        return redirect('listanimes-detail', self.kwargs['list_pk'])
+        print(request.data)
+        # return redirect('listanimes-detail', self.kwargs['list_pk'])
+        return redirect('animes-detail', request.data['anime_id'])
 
     def destroy(self, request, *args, **kwargs):
         user_id = self.request.user.id

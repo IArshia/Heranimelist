@@ -32,13 +32,13 @@ Bootstrap News Template - Free HTML Templates
             <div class="row">
                 <div class="col-lg-9">
                     <div class="row">
-                        {% for anime in list.items %}
+                        {% for item in list.items %}
                             <div class="col-md-4">
                                 <div class="mn-img">
-                                    <img src={{anime.anime.image_url}} />
+                                    <img src={{item.anime.image_url}} />
                                 </div>
                                 <div class="mn-title">
-                                    <a href="{% url 'list-items-detail' list.id anime.id %}">{{anime.anime.name}}</a>
+                                    <a href="{% url 'animes-detail' item.anime.id %}">{{item.anime.name}}</a>
                                 </div>
                             </div>
                         {% endfor %}

@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'anime',
     'core',
-  
 
 ]
 
@@ -142,6 +141,6 @@ DATABASES = {
          'NAME': 'heranimelist',
          'HOST': 'localhost',
          'USER': 'root',
-         'PASSWORD': 'Iarshi4_1381'
+         'PASSWORD': 'Sh278137'
      }
 }
