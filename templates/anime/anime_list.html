@@ -474,6 +474,28 @@
                     {% if previous %}
                         <a href="{{previous}}">previous</a>
                     {% endif %}
+
+                    {% comment %} {% for page_link in html_page.page_links %}
+                        <a href="{{ page_link.url }}">{{ page_link.number }}</a>
+                    {% endfor %} {% endcomment %}
+
+                    {% for page_link in html_page.page_links %}
+                        {% if page_link.is_break %}
+                        <li class="disabled">
+                            <a href="#"><span aria-hidden="true">&hellip;</span></a>
+                        </li>
+                        {% else %}
+                        {% if page_link.is_active %}
+                            <li class="active">
+                            <a href="{{ page_link.url }}">{{ page_link.number }}</a>
+                            </li>
+                        {% else %}
+                            <li>
+                            <a href="{{ page_link.url }}">{{ page_link.number }}</a>
+                            </li>
+                        {% endif %}
+                        {% endif %}
+                    {% endfor %}
             
                     {% comment %} <span class="current">
                         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.

@@ -53,7 +53,6 @@ class AnimeViewSet(ModelViewSet):
             })
 
 
-
     
 class ListAnimeViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', 'head', 'options']
