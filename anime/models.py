@@ -1,17 +1,30 @@
 from typing import Any
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.conf import settings
+
 
 class Anime(models.Model):
     name = models.CharField(max_length=255)
     summery = models.TextField(blank=True)
     myanimelist_score = models.DecimalField(max_digits=6, decimal_places=2)
     released_date = models.DateField()
-    score = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     image_url = models.TextField(null=True)
 
     def __str__(self) -> str:
         return self.name
+    
+
+
+class Score(models.Model):
+    anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name='scores')
+    user_score = models.IntegerField(
+        default=0,
+        validators=[
+            MaxValueValidator(10),
+            MinValueValidator(0)
+        ])
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     
 
 

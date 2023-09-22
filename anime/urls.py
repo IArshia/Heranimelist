@@ -15,10 +15,10 @@ listanime_router.register('items', views.ListAnimeItemViewSet, basename='list-it
 
 animes_router = routers.NestedDefaultRouter(router, 'animes', lookup='anime')
 animes_router.register('comments', views.CommentViewSet, basename='anime-comments')
+animes_router.register('scores', views.ScoreViewSet, basename='anime-scores')
 
 
-urlpatterns = router.urls + listanime_router.urls 
-urlpatterns += animes_router.urls
+urlpatterns = router.urls + listanime_router.urls + animes_router.urls
 
 # urlpatterns = [
 #     path('animes/', views.AnimeListView.as_view(), name='animes'),

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.db import transaction
-from . models import Anime, ListAnime, ListAnimeItem, Comment
+from . models import Anime, ListAnime, ListAnimeItem, Comment, Score
 from django.conf import settings
 
 class SimpleCommetSerializer(serializers.ModelSerializer):
@@ -14,18 +14,34 @@ class SimpleCommetSerializer(serializers.ModelSerializer):
         return comment.user.username
 
 
+class ScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Score
+        fields = ['id', 'user_score', 'heranimelist_score', 'user']
+
+    heranimelist_score = serializers.SerializerMethodField()
+
+    def get_heranimelist_score(self, score: Score):
+        print(score.anime.id)
+        return 1
+
+
 class AnimeSerializer(serializers.ModelSerializer):
     comments = SimpleCommetSerializer(many=True, read_only=True)
+    scores = ScoreSerializer(many=True, read_only=True)
+    
     class Meta:
         model = Anime
-        fields = ['id', 'name', 'summery', 'myanimelist_score', 'score', 'released_date', 'image_url', 'comments']
+        fields = ['id', 'name', 'summery', 'myanimelist_score', 'scores', 'released_date', 'image_url', 'comments']
 
+
+    
 
 
 class SimpleAnimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Anime
-        fields = ['id', 'name', 'summery', 'myanimelist_score', 'score', 'released_date', 'image_url']
+        fields = ['id', 'name', 'summery', 'myanimelist_score', 'scores', 'released_date', 'image_url']
 
 
 

@@ -11,15 +11,16 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 from anime.pagination import DefaultPagination
-from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSerializer, UpdateListAnimeSerializer, ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, UpdateCommentSerializer
-from .models import Anime, ListAnime, ListAnimeItem, Comment
+from .serializers import AnimeSerializer, ListAnimeSerializer, AddListAnimeSerializer, UpdateListAnimeSerializer, UpdateCommentSerializer
+from .serializers import ListAnimeItmeSerializer, CommentSerializer, AddListAnimeItemSerializer, PostCommentSerializer, ScoreSerializer
+from .models import Anime, ListAnime, ListAnimeItem, Comment, Score
 from .permissions import IsAdminOrReadOnly
 
 
 
 class AnimeViewSet(ModelViewSet):
     serializer_class = AnimeSerializer
-    queryset = Anime.objects.prefetch_related('comments').all()
+    queryset = Anime.objects.prefetch_related('comments', 'scores').all()
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     pagination_class = DefaultPagination
@@ -37,15 +38,18 @@ class AnimeViewSet(ModelViewSet):
         self.template_name = 'anime/anime_detail.html'
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        queryset_list = ListAnime.objects.filter(user=self.request.user).all()
-        serializer_list = ListAnimeSerializer(queryset_list, many=True)
+        if self.request.user.is_authenticated:
+            queryset_list = ListAnime.objects.filter(user=self.request.user).all()
+            serializer_list = ListAnimeSerializer(queryset_list, many=True).data
+        else:
+            serializer_list = None
         serializer_comment = PostCommentSerializer()
         serializer_item = AddListAnimeItemSerializer({'anime_id': self.kwargs['pk']})
         return Response({
             'serializer': serializer_comment, 
             'serializer_item':serializer_item, 
-            'anime': serializer.data, 
-            'lists': serializer_list.data
+            'anime': serializer.data,
+            'lists': serializer_list
             })
 
 
@@ -158,15 +162,18 @@ class ListAnimeItemViewSet(ModelViewSet):
         self.perform_destroy(list_item)
         anime = Anime.objects.get(id=anime_id)
         serializer = AnimeSerializer(anime)
-        queryset_list = ListAnime.objects.filter(user=self.request.user).all()
-        serializer_list = ListAnimeSerializer(queryset_list, many=True)
+        if self.request.user.is_authenticated:
+            queryset_list = ListAnime.objects.filter(user=self.request.user).all()
+            serializer_list = ListAnimeSerializer(queryset_list, many=True).data
+        else:
+            serializer_list = None
         serializer_comment = PostCommentSerializer()
         serializer_item = AddListAnimeItemSerializer({'anime_id': self.kwargs['pk']})
         return Response({
             'serializer': serializer_comment, 
             'serializer_item':serializer_item, 
-            'anime': serializer.data, 
-            'lists': serializer_list.data
+            'anime': serializer.data,
+            'lists': serializer_list
             })
 
 
@@ -239,7 +246,10 @@ class CommentViewSet(ModelViewSet):
         return redirect('animes-detail', self.kwargs['anime_pk'])
     
     
-    
+
+class ScoreViewSet(ModelViewSet):
+    queryset = Score.objects.select_related('anime').all()
+    serializer_class = ScoreSerializer
     
 
 

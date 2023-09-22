@@ -39,59 +39,61 @@ Bootstrap News Template - Free HTML Templates
                         <div class="sn-content">
                             <h1 class="sn-title">{{anime.name}}</h1>
                             <h3>MyAnimeList Score: {{anime.myanimelist_score}}</h3>
+                            <h3>HerAnimeList Score: {{anime.scores}}</h3>
                             <h3>Released Date: {{anime.released_date}}</h3>
                             <p>
                                 {{anime.summery}}
                             </p>
-                            <div class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style='display: inline-block;'>Add List</a>
-                                
-                                <div class="dropdown-menu" style='width: 300px;'>
-                                    {% for list in lists %}
-                                        <div class='tags' style='display: flex; padding: 0.5rem;'>
-                                            <a class="dropdown-item-2" href="{% url 'listanimes-detail' list.id %}">{{list.name}}</a>
-                                            {% with flag='True' %}
-                                                {% for item in list.items %}
-                                                    {% if anime.id == item.anime.id %}
-                                                        <form class="button-form" action="{% url 'list-items-detail' list.id item.id %}" data-method="DELETE">
-                                                            <button class="btn btn-danger">Remove</button>
-                                                        </form>
-                                                        {% update_variable 'False' as flag %}
-                                                    {% endif %}
-                                                    {% if flag == 'True' and item == list.items|last %}
-                                                        <form class='form-add-list' action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
-                                                            {% csrf_token %}
-                                                            <input name="anime_id" type="hidden" value="{{anime.id}}">
-                                                            <button class="btn btn-primary js-tooltip">Add</button>
-                                                        </form>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            {% endwith %}
-                                            {% if not list.items %}
-                                                <form action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
-                                                    {% csrf_token %}
-                                                    <input name="anime_id" type="hidden" value="{{anime.id}}">
-                                                    <button class="btn btn-primary js-tooltip">Add</button>
-                                                </form>
-                                            {% endif %}
-                                        </div>
-                                        {% comment %} {% if serializer_item %}
-                                            <form action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
-                                                <fieldset>
-                                                {% csrf_token %}
-                                                {% render_form serializer_item %}
-                                                <input name="anime_id" class="form-control" type="hidden" value="{{anime.id}}">
-                                                <div class="form-actions">
-                                                    <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
-                                                </div>
-                                                </fieldset>
-                                            </form>
-                                        {% endif %} {% endcomment %}
-                                    {% endfor %}
+                            {% if user.is_authenticated %}
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style='display: inline-block;'>Add List</a>
                                     
-                                    <a href="{% url 'listanimes-list' %}" class="dropdown-item">Create List</a>
+                                    <div class="dropdown-menu" style='width: 300px;'>
+                                        {% for list in lists %}
+                                            <div class='tags' style='display: flex; padding: 0.5rem;'>
+                                                <a class="dropdown-item-2" href="{% url 'listanimes-detail' list.id %}">{{list.name}}</a>
+                                                {% with flag='True' %}
+                                                    {% for item in list.items %}
+                                                        {% if anime.id == item.anime.id %}
+                                                            <form class="button-form" action="{% url 'list-items-detail' list.id item.id %}" data-method="DELETE">
+                                                                <button class="btn btn-danger">Remove</button>
+                                                            </form>
+                                                            {% update_variable 'False' as flag %}
+                                                        {% endif %}
+                                                        {% if flag == 'True' and item == list.items|last %}
+                                                            <form class='form-add-list' action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                                                                {% csrf_token %}
+                                                                <input name="anime_id" type="hidden" value="{{anime.id}}">
+                                                                <button class="btn btn-primary js-tooltip">Add</button>
+                                                            </form>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endwith %}
+                                                {% if not list.items %}
+                                                    <form action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                                                        {% csrf_token %}
+                                                        <input name="anime_id" type="hidden" value="{{anime.id}}">
+                                                        <button class="btn btn-primary js-tooltip">Add</button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+                                            {% comment %} {% if serializer_item %}
+                                                <form action="{% url 'list-items-list' list.id %}" method="POST" enctype="multipart/form-data" class="form-horizontal" novalidate>
+                                                    <fieldset>
+                                                    {% csrf_token %}
+                                                    {% render_form serializer_item %}
+                                                    <input name="anime_id" class="form-control" type="hidden" value="{{anime.id}}">
+                                                    <div class="form-actions">
+                                                        <button class="btn btn-primary js-tooltip" title="Make a POST request on the {{ name }} resource">POST</button>
+                                                    </div>
+                                                    </fieldset>
+                                                </form>
+                                            {% endif %} {% endcomment %}
+                                        {% endfor %}
+                                        <a href="{% url 'listanimes-list' %}" class="dropdown-item">Create List</a>
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
                             <p></p>
                             {% if anime.comments %}
                                 <h4>Comments</h4>
