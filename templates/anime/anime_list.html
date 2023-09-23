@@ -469,43 +469,70 @@
                 </div>
             </div>
 
-            <div class="pagination">
+            {% comment %} <div class="pagination">
                 <span class="step-links">
                     {% if previous %}
                         <a href="{{previous}}">previous</a>
-                    {% endif %}
-
-                    {% comment %} {% for page_link in html_page.page_links %}
-                        <a href="{{ page_link.url }}">{{ page_link.number }}</a>
-                    {% endfor %} {% endcomment %}
-
-                    {% for page_link in html_page.page_links %}
-                        {% if page_link.is_break %}
-                        <li class="disabled">
-                            <a href="#"><span aria-hidden="true">&hellip;</span></a>
-                        </li>
-                        {% else %}
-                        {% if page_link.is_active %}
-                            <li class="active">
-                            <a href="{{ page_link.url }}">{{ page_link.number }}</a>
-                            </li>
-                        {% else %}
-                            <li>
-                            <a href="{{ page_link.url }}">{{ page_link.number }}</a>
-                            </li>
-                        {% endif %}
-                        {% endif %}
-                    {% endfor %}
+                    {% endif %}  
             
-                    {% comment %} <span class="current">
+                    <span class="current">
                         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                    </span> {% endcomment %}
+                    </span>
             
                     {% if next %}
                         <a href="{{ next }}">next</a>
                     {% endif %}
                 </span>
-            </div>
+            </div> {% endcomment %}
+
+            <ul class="pagination" style="margin: 5px 0 10px 0">
+                {% if previous %}
+                  <li>
+                    <a href="{{ previous }}" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                {% else %}
+                  <li class="disabled">
+                    <a href="#" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                {% endif %}
+              
+                {% for page_link in page_links %}
+                  {% if page_link.is_break %}
+                    <li class="disabled">
+                      <a href="#"><span aria-hidden="true">&hellip;</span></a>
+                    </li>
+                  {% else %}
+                    {% if page_link.is_active %}
+                      <li class="active">
+                        <a href="{{ page_link.url }}">{{ page_link.number }}</a>
+                      </li>
+                    {% else %}
+                      <li>
+                        <a href="{{ page_link.url }}">{{ page_link.number }}</a>
+                      </li>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              
+                {% if next %}
+                  <li>
+                    <a href="{{ next }}" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                {% else %}
+                  <li class="disabled">
+                    <a href="#" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                {% endif %}
+            </ul>
+
             
         </div>
     </div>
