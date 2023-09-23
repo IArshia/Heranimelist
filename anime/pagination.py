@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 
 class DefaultPagination(PageNumberPagination):
-    number_show_page = 3
+    number_show_page = 2
 
     def get_paginated_response(self, data):
       return Response(OrderedDict([
