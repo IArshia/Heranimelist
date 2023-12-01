@@ -10,6 +10,7 @@ djangorestframework = "*"
 django-filter = "*"
 drf-nested-routers = "*"
 mysqlclient = "*"
+bs4 = "*"
 
 [dev-packages]
 

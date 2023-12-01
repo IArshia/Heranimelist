@@ -1,6 +1,6 @@
 import requests, re
 from bs4 import BeautifulSoup
- 
+
 
 # f2 = open("anime_records_2.sql", "w")
 
